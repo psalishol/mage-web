@@ -1,18 +1,18 @@
 import {AppRegistry} from 'react-native';
-import {name as appName} from '../app.json';
+import {name as appName} from './app.json';
 import App from './App';
 import 'react-native-gesture-handler';
-import Feather from 'react-native-vector-icons/dist/Feather';
-import Entypo from 'react-native-vector-icons/dist/Entypo';
+// import Feather from 'react-native-vector-icons/dist/Feather';
+// import Entypo from 'react-native-vector-icons/dist/Entypo';
 
-import iconFonts from 'react-native-vector-icons/Fonts/Feather.ttf';
+import iconFonts from 'react-native-vector-icons/Fonts/Entypo.ttf';
 
 // import poppinsBold from '../web/public/assets/fonts/poppins/Poppins-Bold.ttf';
 // import poppinsBold from '../web/public/assets/fonts/Poppins-Bold.ttf';
 
 const iconFontStyles = `@font-face {
   src: url(${iconFonts});
-  font-family: Feather;
+  font-family: Entypo;
 }`;
 
 const style = document.createElement('style');
