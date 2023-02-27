@@ -4,7 +4,7 @@ https://user-images.githubusercontent.com/85138073/221442551-3fadc169-7212-4ed3-
 
 Hey there! This is the repo for my portfolio website, and I'd love for you to check it out. Feel free to use it as inspiration for your own website.
 
-Link to figma: https://www.figma.com/file/oGrCrV0RZT97JEa8OBjXE2/Portfolio?node-id=0%3A1&t=RNf1M4dMNJrIidHL-1
+Link to [figma](https://www.figma.com/file/oGrCrV0RZT97JEa8OBjXE2/Portfolio?node-id=0%3A1&t=RNf1M4dMNJrIidHL-1)
 
 The website showcases my skills, experience, and projects. I designed it to be creative, clean, modern, and user-friendly, with easy navigation and clear calls-to-action.
 
