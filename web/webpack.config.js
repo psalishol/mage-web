@@ -5,25 +5,21 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const appDirectory = path.resolve(__dirname);
 
-// const {presets} = require(`${appDirectory}/babel.config.js`);
-const {presets} = require('../babel.config.js');
+const {presets} = require('./babel.config.js');
 
 const compileNodeModules = [
-  // Add every react-native package that needs compiling
+  'react-native-linear-gradient',
   'react-native-gesture-handler',
   'babel-polyfill',
   'react-native-reanimated',
-].map(moduleName =>
-  path.resolve(appDirectory, `../node_modules/${moduleName}`),
-);
+].map(moduleName => path.resolve(appDirectory, `./node_modules/${moduleName}`));
 
 const babelLoaderConfiguration = {
   test: /\.js$|tsx?$/,
-  // Add every directory that needs to be compiled by Babel during the build.
   include: [
-    path.resolve(__dirname, 'index.js'), // Entry to your application
-    path.resolve(__dirname, 'App.tsx'), // Change this to your main App file
-    path.resolve(__dirname, '../src'),
+    path.resolve(__dirname, 'index.js'),
+    path.resolve(__dirname, './App.tsx'),
+    path.resolve(__dirname, './src'),
     ...compileNodeModules,
   ],
   use: {
@@ -40,8 +36,8 @@ const iconLoader = {
   test: /\.ttf$/,
   loader: 'url-loader',
   include: [
-    path.resolve(__dirname, '../node_modules/react-native-vector-icons'),
-    path.resolve(__dirname, '../web/public/assets/fonts/poppins'),
+    path.resolve(__dirname, './node_modules/react-native-vector-icons'),
+    path.resolve(__dirname, './public/assets/fonts/poppins'),
   ],
 };
 
@@ -66,13 +62,10 @@ const imageLoaderConfiguration = {
 
 module.exports = {
   entry: ['babel-polyfill', path.join(__dirname, 'index.js')],
-  //   {
-  //     app: path.join(__dirname, 'index.web.js'),
-  //   },
   output: {
-    path: path.resolve(appDirectory, 'dist'),
+    path: path.resolve(appDirectory, 'build'),
     publicPath: '/',
-    filename: 'rnw_blogpost.bundle.js',
+    filename: 'portfolio.bundle.js',
   },
   resolve: {
     extensions: ['.web.tsx', '.web.ts', '.tsx', '.ts', '.web.js', '.js'],
@@ -92,8 +85,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'index.html'),
-      //   favicon: '../web/public/favicon.ico',
+      template: path.join(__dirname, './public/index.html'),
       title: 'World of magic 🌪',
     }),
     new webpack.HotModuleReplacementPlugin(),
