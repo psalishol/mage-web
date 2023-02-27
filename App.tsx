@@ -1,170 +1,156 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
   Dimensions,
+  Image,
   Pressable,
+  ScrollView,
+  Text,
+  View,
 } from 'react-native';
-import Counter from './src/components/Counter';
+// import {ScreenBackground} from '../src/components/template';
+import {useAtom, useAtomValue, useSetAtom} from 'jotai';
+// import {currentThemeAtom, verticalScrollInsetAtom} from '../src/state';
+import {PortalProvider} from '@gorhom/portal';
+// import {AboutMeSection, PortfolioCoverPage, QuoteSection} from '../src/layout';
+// import {useAppMode, useRTWindowDimension} from '../src/hooks';
+import {MotiView} from 'moti';
 import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
+  useDerivedValue,
   withSpring,
+  useAnimatedStyle,
 } from 'react-native-reanimated';
-import {Gesture, GestureDetector} from 'react-native-gesture-handler';
+import {ThemeProvider} from '@shopify/restyle';
+import {arrow} from './src/assets';
+import {ScreenBackground} from './src/components/template';
+import {useAppMode} from './src/hooks';
+import {PortfolioCoverPage, QuoteSection, AboutMeSection} from './src/layout';
+import {verticalScrollInsetAtom} from './src/state';
+import {lightTheme, theme} from './src/style/Theme';
 
-const CounterComp = () => {
+const {height} = Dimensions.get('screen');
+
+const WebApp = () => {
+  return <Entry />;
+};
+
+const Entry: React.FunctionComponent = () => {
+  const {isLight} = useAppMode();
+
+  const baseTheme = isLight ? lightTheme : theme;
+
+  const setInset = useSetAtom(verticalScrollInsetAtom);
+
+  const scrollRef = useRef<ScrollView>(null);
+
+  const handleNextPress = useCallback(() => {
+    scrollRef.current?.scrollTo({y: height});
+  }, []);
+
   return (
-    <View>
-      <Text style={styles.title}>Hello from {'\n'}React Native Web!</Text>
-      <TouchableOpacity
-        // onPress={() => setCount(count + 1)}
-        style={styles.button}>
-        <Text>Click me!</Text>
-      </TouchableOpacity>
-    </View>
+    <ThemeProvider theme={baseTheme}>
+      <PortalProvider>
+        <ScrollView
+          ref={scrollRef}
+          scrollEventThrottle={16}
+          onScroll={e => {
+            setInset(e.nativeEvent.contentOffset.y);
+          }}
+          showsVerticalScrollIndicator={true}>
+          <PortfolioCoverPage>
+            <Scroll onPress={handleNextPress} />
+          </PortfolioCoverPage>
+          <QuoteSection />
+          <AboutMeSection />
+          <Projects />
+          <ContactMeSection />
+        </ScrollView>
+      </PortalProvider>
+    </ThemeProvider>
   );
 };
 
-const App = () => {
-  const {height, width} = Dimensions.get('screen');
-  console.log('height', height, 'width', width);
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-  const tranlateX = useSharedValue(0);
-
-  // const style = useAnimatedStyle(() => {}, []);
-
-  // return (
-  //   <View>
-  //     <ResizerView initialWidth={400} />
-  //   </View>
-  // );
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Hello from {'\n'}React Native Web!</Text>
-      <TouchableOpacity
-        // onPress={() => setCount(count + 1)}
-        style={styles.button}>
-        <Text>Click me!</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-interface ResizerProps {
-  initialWidth: number;
-  renderContent?: () => JSX.Element;
+interface ScrollNextProps {
+  onPress: () => void;
 }
 
-const ResizerView: React.FunctionComponent<ResizerProps> = ({
-  initialWidth,
-  renderContent,
-}) => {
-  const width = useSharedValue(initialWidth);
+const Scroll: React.FunctionComponent<ScrollNextProps> = ({onPress}) => {
+  const scrollInset = useAtomValue(verticalScrollInsetAtom);
 
-  const gesture = Gesture.Pan()
-    .onUpdate(e => {
-      console.log(e.translationX);
-      width.value = width.value + e.translationX;
-    })
-    .onEnd(() => {});
+  console.log('this is the scroll inset', scrollInset);
 
-  const style = useAnimatedStyle(() => {
+  const hide = scrollInset > 650;
+
+  const progress = useDerivedValue(() => {
+    return withSpring(scrollInset > 650 ? 0 : 0.6, {damping: 500});
+  }, [scrollInset]);
+
+  const rStyle = useAnimatedStyle(() => {
     return {
-      width: width.value,
+      opacity: progress.value,
     };
   }, []);
 
   return (
-    <Animated.View
+    <AnimatedPressable
+      onPress={onPress}
       style={[
         {
-          // width: width.value,
-          height: 500,
-          // flex: 1,
-          flexDirection: 'row',
-          backgroundColor: 'red',
+          // opacity: 0.6,
+          position: 'absolute',
+          bottom: 10,
+          right: 20,
         },
-        style,
+        rStyle,
       ]}>
-      <View style={{flex: 1}}>{renderContent && renderContent()}</View>
-      <GestureDetector gesture={gesture}>
-        <Pressable
-          style={{
-            backgroundColor: 'green',
-            width: 1,
-            height: 500,
-            cursor: 'col-resize',
-          }}
-          onHoverIn={() => {}}
-          onHoverOut={() => {}}
+      <MotiView
+        style={{justifyContent: 'center', alignItems: 'center'}}
+        from={{translateY: 5}}
+        animate={{translateY: 0}}
+        transition={{damping: 500, repeat: 2}}>
+        <Text style={{color: 'white', fontWeight: '100'}}>Next</Text>
+        <Image
+          resizeMode="contain"
+          style={{height: 30, width: 50, marginTop: 5}}
+          source={{uri: arrow}}
         />
-      </GestureDetector>
-    </Animated.View>
+      </MotiView>
+    </AnimatedPressable>
   );
 };
 
-const AnimatedText = Animated.createAnimatedComponent(Text);
+const ContactMeSection = () => {
+  return (
+    <ScreenBackground>
+      <Text style={{color: '#898989'}}>
+        Interested in having me on your team?.. Contact me 🙂
+      </Text>
+    </ScreenBackground>
+  );
+};
+
+export default WebApp;
 
 interface Props {
-  dimension: number;
+  bg: string;
 }
 
-const TranlatableText: React.FC<Props> = ({dimension}) => {
-  const progress = useSharedValue(140);
-
-  useEffect(() => {
-    progress.value = withSpring(0, {damping: 300});
-  }, [progress]);
-
-  const tranlateStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{translateY: progress.value}],
-    };
-  }, []);
-
-  const gesture = Gesture.Pan()
-    .onStart(() => {})
-    .onUpdate(e => {
-      progress.value = e.translationY;
-    })
-    .onEnd(() => {});
-
+const Projects = () => {
   return (
-    <GestureDetector gesture={gesture}>
-      <Pressable style={{cursor: 'col-resize'}}>
-        <AnimatedText
-          // accessibilityRole={'adjustable'}
-          accessibilityRole={'button'}
-          style={[tranlateStyle, {}]}>
-          {dimension}
-        </AnimatedText>
-      </Pressable>
-    </GestureDetector>
+    <ScreenBackground>
+      <View style={{margin: 20}}>
+        <Text style={{color: '#898989'}}>Projects</Text>
+      </View>
+      <View
+        style={{
+          height: 600,
+          marginHorizontal: 100,
+          backgroundColor: 'red',
+          marginTop: 50,
+          shadowColor: 'rgba(40,40,40)',
+          borderRadius: 10,
+        }}></View>
+    </ScreenBackground>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#C3E8BD',
-    paddingTop: 40,
-    paddingHorizontal: 10,
-  },
-  button: {
-    backgroundColor: '#ADBDFF',
-    padding: 5,
-    marginVertical: 20,
-    alignSelf: 'flex-start',
-  },
-  title: {
-    fontSize: 40,
-  },
-});
-
-export default App;
