@@ -1,11 +1,8 @@
 {
-  "name": "ReactNativeWebWebpackTest",
+  "name": "portfolio",
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
-    "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "build": "rm -rf dist/ && webpack --mode=production --config webpack.config.js",
