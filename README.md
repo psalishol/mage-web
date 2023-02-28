@@ -10,7 +10,31 @@ The website showcases my skills, experience, and projects. I designed it to be c
 
 The website is built using React Native web, and is fully responsive to different screen sizes. Some of the framework used is jotai for the state management, reanimated for animation, sanity for the backend and some pngs to enhance the functionality and aesthetics of the website.
 
-Feel free to explore the website and let me know what you think. If you have any questions or feedback, don't hesitate to reach out. And of course, feel free to use my code as a reference for your own portfolio website!
+## Project structure
 
-## Development mode
+```
+$PROJECT_ROOT
+│   # project backend
+├── backend
+│   # Web 
+└── web
+    │    # Static files for images and template
+    ├──  public
+    │    # project source code
+    └── src
+  
+```
+
+## License
+
+MIT License.
+
+You can create your own homepage for free without notifying me by forking this project under the following conditions:
+
+- Add a link to [my homepage](https://psalishol.dev)
+- Do not use my favicon
+
+
+
+Feel free to explore the website and let me know what you think. If you have any questions or feedback, don't hesitate to reach out. And of course, feel free to use my code as a reference for your own portfolio website!
 
