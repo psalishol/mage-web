@@ -1,8 +1,10 @@
-import {grass} from '../../assets';
+import {grass, grassDark} from '../../assets';
+import {useAppMode} from '../../hooks';
 import {Image} from '../atom';
 import React from 'react';
 
 const Grass: React.FunctionComponent = () => {
+  const {isLight} = useAppMode();
   return (
     <Image
       position={'absolute'}
@@ -12,7 +14,7 @@ const Grass: React.FunctionComponent = () => {
       height={100}
       resizeMethod="scale"
       resizeMode="contain"
-      source={{uri: grass}}
+      source={{uri: isLight ? grass : grassDark}}
     />
   );
 };
