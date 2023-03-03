@@ -1,7 +1,18 @@
-import {Image} from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, {
+  interpolateColor,
+  useAnimatedStyle,
+  useDerivedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import React from 'react';
-import styles from './ScreenBackground.style';
+import {theme, lightTheme} from '../../style/Theme';
+import {useAppMode} from '../../hooks';
+import {backgroundPicture} from '../../assets';
+
+import {Dimensions} from 'react-native';
+import {Image} from '../atom';
+
+const {height} = Dimensions.get('window');
 
 interface Props {
   children: React.ReactNode;
@@ -12,13 +23,35 @@ const ScreenBackground: React.FunctionComponent<Props> = ({
   children,
   useBackground = true,
 }) => {
+  const {isLight} = useAppMode();
+  const progress = useDerivedValue(() => {
+    return withTiming(isLight ? 1 : 0, {duration: 500});
+  });
+
+  const backgroundColor = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        progress.value,
+        [0, 1],
+        [theme.colors.backgroundColor, lightTheme.colors.backgroundColor],
+      ),
+    };
+  });
+
   return (
-    <Animated.View style={[styles.container]}>
+    <Animated.View style={[backgroundColor, {height}]}>
       {useBackground && (
         <Image
-          style={styles.image}
+          top={0}
+          right={0}
+          left={0}
+          opacity={0.06}
+          position="absolute"
+          height="100%"
+          width="100%"
+          flex={1}
           source={{
-            uri: 'https://images.unsplash.com/photo-1515387784663-e2e29a23f69e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjB8fHBhdHRlcm58ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
+            uri: isLight ? undefined : backgroundPicture,
           }}
         />
       )}
