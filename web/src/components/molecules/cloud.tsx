@@ -1,8 +1,10 @@
-import {cloud} from '../../assets';
+import {cloud, cloudLight} from '../../assets';
+import {useAppMode} from '../../hooks';
 import {Image} from '../atom';
 import React from 'react';
 
 const Cloud: React.FunctionComponent = () => {
+  const {isLight} = useAppMode();
   return (
     <Image
       position="absolute"
@@ -10,7 +12,7 @@ const Cloud: React.FunctionComponent = () => {
       top={0}
       height={720}
       width={1300}
-      source={{uri: cloud}}
+      source={{uri: isLight ? cloudLight : cloud}}
     />
   );
 };
