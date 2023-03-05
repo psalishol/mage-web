@@ -9,25 +9,25 @@ import {
   Grass,
   LampPost,
   ModeSwitcher,
+  MovingCloud,
+  NextScrollHandler,
+  ResumePreviewerHandler,
 } from '../components/molecules';
 
-interface Props {
-  children?: React.ReactNode;
-}
-
-const PortfolioCoverPage: React.FunctionComponent<Props> = ({children}) => {
+const PortfolioCoverPage: React.FunctionComponent = () => {
   return (
     <ScreenBackground>
       <Cloud />
-      <Header />
       <LampPost />
-
       <PortfolioCoverContent />
       <Grass />
       <BottomGradient />
-      {children && children}
       <FlyingBird />
+      <MovingCloud />
       <ModeSwitcher />
+      <Header />
+      <NextScrollHandler />
+      <ResumePreviewerHandler />
     </ScreenBackground>
   );
 };
