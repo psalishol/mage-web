@@ -12,16 +12,18 @@ import {backgroundPicture} from '../../assets';
 import {Dimensions} from 'react-native';
 import {Image} from '../atom';
 
-const {height} = Dimensions.get('window');
+const {height: screenHeight} = Dimensions.get('window');
 
 interface Props {
   children: React.ReactNode;
   useBackground?: boolean;
+  height?: number;
 }
 
 const ScreenBackground: React.FunctionComponent<Props> = ({
   children,
   useBackground = true,
+  height,
 }) => {
   const {isLight} = useAppMode();
   const progress = useDerivedValue(() => {
@@ -39,7 +41,8 @@ const ScreenBackground: React.FunctionComponent<Props> = ({
   });
 
   return (
-    <Animated.View style={[backgroundColor, {height}]}>
+    <Animated.View
+      style={[backgroundColor, {height: height ? height : screenHeight}]}>
       {useBackground && (
         <Image
           top={0}
